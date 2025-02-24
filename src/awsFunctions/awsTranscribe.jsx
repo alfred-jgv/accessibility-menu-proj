@@ -1,4 +1,8 @@
-import { TranscribeClient, StartTranscriptionJobCommand, GetTranscriptionJobCommand } from "@aws-sdk/client-transcribe";
+import {
+  TranscribeClient,
+  StartTranscriptionJobCommand,
+  GetTranscriptionJobCommand,
+} from "@aws-sdk/client-transcribe";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const accessKeyId = import.meta.env.VITE_AWS_ACCESS_KEY_ID;
@@ -10,8 +14,14 @@ if (!accessKeyId || !secretAccessKey || !region || !bucketName) {
   throw new Error("AWS credentials or configuration missing.");
 }
 
-const s3Client = new S3Client({ region, credentials: { accessKeyId, secretAccessKey } });
-const transcribeClient = new TranscribeClient({ region, credentials: { accessKeyId, secretAccessKey } });
+const s3Client = new S3Client({
+  region,
+  credentials: { accessKeyId, secretAccessKey },
+});
+const transcribeClient = new TranscribeClient({
+  region,
+  credentials: { accessKeyId, secretAccessKey },
+});
 
 export async function uploadAudioToS3(audioBlob) {
   const fileKey = `recordings/${Date.now()}.webm`;
@@ -56,7 +66,7 @@ export async function transcribeSpeech(setToastMessage, setShowToast) {
       mediaRecorder.onstop = async () => {
         try {
           setToastMessage("📤 Uploading audio...");
-          
+
           const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
           const s3Uri = await uploadAudioToS3(audioBlob);
 
@@ -70,7 +80,9 @@ export async function transcribeSpeech(setToastMessage, setShowToast) {
             OutputBucketName: bucketName,
           };
 
-          await transcribeClient.send(new StartTranscriptionJobCommand(transcribeParams));
+          await transcribeClient.send(
+            new StartTranscriptionJobCommand(transcribeParams)
+          );
 
           let jobData;
           let transcriptionStatus;
@@ -78,14 +90,20 @@ export async function transcribeSpeech(setToastMessage, setShowToast) {
           do {
             await new Promise((res) => setTimeout(res, 3000));
             jobData = await transcribeClient.send(
-              new GetTranscriptionJobCommand({ TranscriptionJobName: transcribeParams.TranscriptionJobName })
+              new GetTranscriptionJobCommand({
+                TranscriptionJobName: transcribeParams.TranscriptionJobName,
+              })
             );
-            transcriptionStatus = jobData.TranscriptionJob.TranscriptionJobStatus;
+            transcriptionStatus =
+              jobData.TranscriptionJob.TranscriptionJobStatus;
           } while (transcriptionStatus === "IN_PROGRESS");
 
           if (transcriptionStatus === "FAILED") {
             setToastMessage("❌ Transcription failed.");
-            reject("Transcription failed: " + (jobData.TranscriptionJob.FailureReason || "Unknown error"));
+            reject(
+              "Transcription failed: " +
+                (jobData.TranscriptionJob.FailureReason || "Unknown error")
+            );
             return;
           }
 
@@ -96,8 +114,10 @@ export async function transcribeSpeech(setToastMessage, setShowToast) {
           }
 
           setToastMessage("✅ Transcription complete!");
-          
-          const resultUrl = new URL(jobData.TranscriptionJob.Transcript.TranscriptFileUri);
+
+          const resultUrl = new URL(
+            jobData.TranscriptionJob.Transcript.TranscriptFileUri
+          );
           const response = await fetch(resultUrl.href);
           const json = await response.json();
           resolve(json.results.transcripts[0].transcript);
@@ -118,4 +138,3 @@ export async function transcribeSpeech(setToastMessage, setShowToast) {
     throw new Error("Failed to record audio: " + error.message);
   }
 }
-

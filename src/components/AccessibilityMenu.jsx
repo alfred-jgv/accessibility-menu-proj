@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { FaUniversalAccess, FaSearchPlus, FaSearchMinus, FaAdjust, FaSearch, FaMicrophone, FaVolumeUp, FaQuestionCircle } from "react-icons/fa";
+import {
+  FaUniversalAccess,
+  FaSearchPlus,
+  FaSearchMinus,
+  FaAdjust,
+  FaSearch,
+  FaMicrophone,
+  FaVolumeUp,
+  FaQuestionCircle,
+} from "react-icons/fa";
 import ToastMessage from "./ToastMessage";
 import { createRoot } from "react-dom/client";
 import HelpModal from "./HelpModal";
@@ -35,16 +44,22 @@ const AccessibilityMenu = () => {
     if (isMenuOpen) {
       setIsAnimating(true);
     } else {
-      setTimeout(() => setIsAnimating(false), 300); 
+      setTimeout(() => setIsAnimating(false), 300);
     }
   }, [isMenuOpen]);
 
   useEffect(() => {
-    localStorage.setItem("enableTextToSpeech", JSON.stringify(enableTextToSpeech));
+    localStorage.setItem(
+      "enableTextToSpeech",
+      JSON.stringify(enableTextToSpeech)
+    );
     const paragraphs = document.querySelectorAll("p");
-    paragraphs.forEach(p => {
+    paragraphs.forEach((p) => {
       if (enableTextToSpeech) {
-        if (!p.previousSibling || !p.previousSibling.classList.contains("speaker-button")) {
+        if (
+          !p.previousSibling ||
+          !p.previousSibling.classList.contains("speaker-button")
+        ) {
           const speakerButton = document.createElement("button");
           speakerButton.classList.add("speaker-button");
           speakerButton.type = "button";
@@ -56,7 +71,9 @@ const AccessibilityMenu = () => {
           createRoot(speakerButton).render(<FaVolumeUp />);
         }
       } else {
-        document.querySelectorAll(".speaker-button").forEach(button => button.remove());
+        document
+          .querySelectorAll(".speaker-button")
+          .forEach((button) => button.remove());
       }
     });
   }, [enableTextToSpeech]);
@@ -72,7 +89,7 @@ const AccessibilityMenu = () => {
       document.body.style.backgroundColor = "#F5F5F5";
       document.body.style.color = "#333333";
       document.body.style.backgroundImage = "none";
-      document.querySelectorAll("input, a").forEach(element => {
+      document.querySelectorAll("input, a").forEach((element) => {
         element.style.backgroundColor = "#FFFFFF";
         element.style.color = "#000000";
         element.style.border = "2px solid #333333";
@@ -81,7 +98,7 @@ const AccessibilityMenu = () => {
       document.body.style.backgroundColor = "";
       document.body.style.color = "";
       document.body.style.backgroundImage = "";
-      document.querySelectorAll("input, a").forEach(element => {
+      document.querySelectorAll("input, a").forEach((element) => {
         element.style.backgroundColor = "";
         element.style.color = "";
         element.style.border = "";
@@ -93,12 +110,12 @@ const AccessibilityMenu = () => {
     try {
       setToastMessage("🔠 Increasing font size...");
       setShowToast(true);
-  
-      setFontSize(prev => {
+
+      setFontSize((prev) => {
         const newSize = Math.min(prev + 2, 24);
         localStorage.setItem("fontSize", newSize);
         document.body.style.fontSize = `${newSize}px`;
-  
+
         setToastMessage(`✅ Font size increased to ${newSize}px.`);
         return newSize;
       });
@@ -108,17 +125,17 @@ const AccessibilityMenu = () => {
       setTimeout(() => setShowToast(false), 3000);
     }
   };
-  
+
   const decreaseFontSize = () => {
     try {
       setToastMessage("🔠 Decreasing font size...");
       setShowToast(true);
-  
-      setFontSize(prev => {
+
+      setFontSize((prev) => {
         const newSize = Math.max(prev - 2, 12);
         localStorage.setItem("fontSize", newSize);
         document.body.style.fontSize = `${newSize}px`;
-  
+
         setToastMessage(`✅ Font size decreased to ${newSize}px.`);
         return newSize;
       });
@@ -133,17 +150,17 @@ const AccessibilityMenu = () => {
     try {
       setToastMessage("🔄 Updating contrast settings...");
       setShowToast(true);
-  
-      setContrast(prev => {
+
+      setContrast((prev) => {
         const newContrast = !prev;
         localStorage.setItem("contrast", JSON.stringify(newContrast));
-  
+
         if (newContrast) {
           document.body.classList.add("high-contrast");
         } else {
           document.body.classList.remove("high-contrast");
         }
-  
+
         setToastMessage("✅ Contrast updated successfully!");
         return newContrast;
       });
@@ -153,13 +170,12 @@ const AccessibilityMenu = () => {
       setTimeout(() => setShowToast(false), 3000);
     }
   };
-  
-  
+
   const magnify = (event) => {
     try {
       setToastMessage("🔍 Adjusting zoom...");
       setShowToast(true);
-  
+
       if (event.detail === 2) {
         setIsZoomed(false);
         setZoom(1);
@@ -168,14 +184,14 @@ const AccessibilityMenu = () => {
         document.body.style.transformOrigin = "";
         document.body.style.height = "";
         document.body.style.overflow = "";
-  
+
         setToastMessage("🔄 Zoom reset to default.");
         setTimeout(() => {
           document.body.style.transition = "";
         }, 300);
         return;
       }
-  
+
       const newZoomState = !isZoomed;
       setIsZoomed(newZoomState);
       setZoom(newZoomState ? 2 : 1);
@@ -184,9 +200,9 @@ const AccessibilityMenu = () => {
       document.body.style.transformOrigin = newZoomState ? "top left" : "";
       document.body.style.height = newZoomState ? "200%" : "";
       document.body.style.overflow = newZoomState ? "auto" : "";
-  
+
       setToastMessage(newZoomState ? "✅ Zoomed in!" : "✅ Zoomed out!");
-      
+
       setTimeout(() => {
         document.body.style.transition = "";
       }, 300);
@@ -196,19 +212,19 @@ const AccessibilityMenu = () => {
       setTimeout(() => setShowToast(false), 3000);
     }
   };
-  
+
   const toggleSpeech = (event) => {
     event.preventDefault();
-    setEnableSpeech(prev => !prev);
+    setEnableSpeech((prev) => !prev);
     if (!enableSpeech) {
       setIsListening(true);
-      handleTranscribe(); 
+      handleTranscribe();
     }
   };
 
   const toggleTextToSpeech = (event = null) => {
     if (event) event.preventDefault();
-    setEnableTextToSpeech(prev => {
+    setEnableTextToSpeech((prev) => {
       const newValue = !prev;
       localStorage.setItem("enableTextToSpeech", JSON.stringify(newValue));
       return newValue;
@@ -219,12 +235,12 @@ const AccessibilityMenu = () => {
     try {
       setToastMessage("🎤 Listening...");
       setShowToast(true);
-      
+
       const result = await transcribeSpeech(setToastMessage, setShowToast);
       const command = result.toLowerCase().trim();
-      
+
       setToastMessage(`✅ Heard: "${command}"`);
-      
+
       switch (true) {
         case command.includes("read aloud"):
           toggleTextToSpeech();
@@ -233,51 +249,50 @@ const AccessibilityMenu = () => {
         case command.includes("open menu"):
           setIsMenuOpen(true);
           break;
-      
+
         case command.includes("close menu"):
           setIsMenuOpen(false);
           break;
-      
+
         case command.includes("increase font size"):
           increaseFontSize();
           break;
-      
+
         case command.includes("decrease font size"):
           decreaseFontSize();
           break;
-      
+
         case command.includes("enable contrast"):
           setContrast(true);
           break;
-      
+
         case command.includes("disable contrast"):
           setContrast(false);
           break;
-      
+
         case command.includes("zoom in"):
           setIsZoomed(true);
           setZoom(2);
           document.body.style.transform = "scale(2)";
           break;
-      
+
         case command.includes("zoom out"):
           setIsZoomed(false);
           setZoom(1);
           document.body.style.transform = "";
           break;
-      
+
         case command.includes("open help"):
           setShowHelp(true);
           break;
-      
+
         case command.includes("close help"):
           setShowHelp(false);
           break;
-      
+
         default:
           setToastMessage("⚠️ Command not recognized.");
       }
-      
     } catch (error) {
       setToastMessage("❌ " + error.message);
     } finally {
@@ -289,18 +304,18 @@ const AccessibilityMenu = () => {
 
   const handleSpeak = async (text) => {
     try {
-        console.log("🔊 Attempting to synthesize speech...");
-        setToastMessage("🔊 Preparing to speak...");
-        setShowToast(true);
-    
-        const audioUrl = await synthesizeSpeech(text);
-        console.log("Generated Audio URL:", audioUrl);
-        if (!audioUrl) {
-            throw new Error("Failed to generate speech audio");
-          }
-      
-          const audio = new Audio(audioUrl);
-          audio.play();
+      console.log("🔊 Attempting to synthesize speech...");
+      setToastMessage("🔊 Preparing to speak...");
+      setShowToast(true);
+
+      const audioUrl = await synthesizeSpeech(text);
+      console.log("Generated Audio URL:", audioUrl);
+      if (!audioUrl) {
+        throw new Error("Failed to generate speech audio");
+      }
+
+      const audio = new Audio(audioUrl);
+      audio.play();
       setToastMessage("✅ Speaking text aloud.");
     } catch (error) {
       setToastMessage("❌ " + error);
@@ -310,11 +325,20 @@ const AccessibilityMenu = () => {
   };
 
   return (
-    <div style={{ position: "fixed", bottom: 16, right: 16, zIndex: 99, display: "flex", alignItems: "center" }}>
+    <div
+      style={{
+        position: "fixed",
+        bottom: 16,
+        right: 16,
+        zIndex: 99,
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
       <button
         className={`fab-button mic-button ${isListening ? "listening" : ""}`}
         onClick={toggleSpeech}
-        style={{ marginRight: 8 }} 
+        style={{ marginRight: 8 }}
       >
         <FaMicrophone color="#fff" />
         <span className="fab-tooltip">Enable Voice Command</span>
@@ -353,7 +377,7 @@ const AccessibilityMenu = () => {
             <FaSearch color="#fff" />
             <span className="tooltip">Toggle Magnify</span>
           </button>
-          <button className="fab-menu-item" onClick={showHelpModal} >
+          <button className="fab-menu-item" onClick={showHelpModal}>
             <FaQuestionCircle color="#fff" />
             <span className="tooltip">Help</span>
           </button>

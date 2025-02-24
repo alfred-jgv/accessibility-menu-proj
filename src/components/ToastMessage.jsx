@@ -14,7 +14,6 @@ function ToastMessage({ show, message, title }) {
     >
       <Toast show={show} animation>
         <Toast.Header>
-          
           <strong className="me-auto">{title}</strong>
           <small>Just now</small>
         </Toast.Header>
