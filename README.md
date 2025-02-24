@@ -24,3 +24,44 @@ This is a **React-based accessibility app** that integrates **AWS Transcribe** (
 
 ---
 
+## 🛠️ Getting Started
+
+These instructions will help you set up the project locally for development and testing.
+
+### ✅ Prerequisites
+
+Ensure you have the following installed:
+
+- **Node.js** (v16 or higher) – [Download Here](https://nodejs.org/)
+- **npm** (v8 or higher) – Comes with Node.js
+- **Git** – [Download Here](https://git-scm.com/)
+- **AWS Account** with access keys
+
+### 📥 Installing
+
+1️⃣ **Clone the repository:**
+```sh
+git clone https://github.com/alfred-jgv/accessibility-menu-proj.git
+cd folder-name
+```
+
+2️⃣ Install dependencies:
+
+```sh
+npm install
+```
+
+3️⃣ Set up environment variables:
+Create a .env file in the root directory and add your AWS credentials:
+
+```sh
+VITE_AWS_ACCESS_KEY_ID=your_access_key
+VITE_AWS_SECRET_ACCESS_KEY=your_secret_key
+VITE_AWS_REGION=your_region
+VITE_AWS_S3_BUCKET=your_bucket_name
+```
+
+4️⃣ Start the development server:
+```sh
+npm run dev
+```
