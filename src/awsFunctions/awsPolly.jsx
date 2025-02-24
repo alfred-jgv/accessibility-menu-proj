@@ -24,8 +24,14 @@ export async function synthesizeSpeech(text) {
     const command = new SynthesizeSpeechCommand(params);
     const response = await pollyClient.send(command);
 
-    const audioBlob = new Blob([response.AudioStream], { type: "audio/mpeg" });
+    if (!response.AudioStream) {
+      throw new Error("Polly did not return an audio stream.");
+    }
+
+    const audioStream = await response.AudioStream.transformToByteArray();
+    const audioBlob = new Blob([audioStream], { type: "audio/mpeg" });
     const audioUrl = URL.createObjectURL(audioBlob);
+
     return audioUrl;
   } catch (error) {
     console.error("Error synthesizing speech:", error);

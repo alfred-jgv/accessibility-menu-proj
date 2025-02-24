@@ -35,11 +35,14 @@ export async function uploadAudioToS3(audioBlob) {
   }
 }
 
-export async function transcribeSpeech() {
+export async function transcribeSpeech(setToastMessage, setShowToast) {
   try {
     if (!navigator.mediaDevices || !MediaRecorder) {
       throw new Error("Your browser does not support audio recording.");
     }
+
+    setToastMessage("🎤 Listening...");
+    setShowToast(true);
 
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const mediaRecorder = new MediaRecorder(stream);
@@ -52,8 +55,12 @@ export async function transcribeSpeech() {
     return new Promise((resolve, reject) => {
       mediaRecorder.onstop = async () => {
         try {
+          setToastMessage("📤 Uploading audio...");
+          
           const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
           const s3Uri = await uploadAudioToS3(audioBlob);
+
+          setToastMessage("⏳ Transcription in progress...");
 
           const transcribeParams = {
             TranscriptionJobName: `transcription-${Date.now()}`,
@@ -67,8 +74,9 @@ export async function transcribeSpeech() {
 
           let jobData;
           let transcriptionStatus;
+
           do {
-            await new Promise((res) => setTimeout(res, 5000));
+            await new Promise((res) => setTimeout(res, 3000));
             jobData = await transcribeClient.send(
               new GetTranscriptionJobCommand({ TranscriptionJobName: transcribeParams.TranscriptionJobName })
             );
@@ -76,23 +84,29 @@ export async function transcribeSpeech() {
           } while (transcriptionStatus === "IN_PROGRESS");
 
           if (transcriptionStatus === "FAILED") {
+            setToastMessage("❌ Transcription failed.");
             reject("Transcription failed: " + (jobData.TranscriptionJob.FailureReason || "Unknown error"));
             return;
           }
 
           if (transcriptionStatus !== "COMPLETED") {
+            setToastMessage("⚠️ Transcription did not complete.");
             reject("Transcription did not complete");
             return;
           }
 
+          setToastMessage("✅ Transcription complete!");
+          
           const resultUrl = new URL(jobData.TranscriptionJob.Transcript.TranscriptFileUri);
           const response = await fetch(resultUrl.href);
           const json = await response.json();
           resolve(json.results.transcripts[0].transcript);
         } catch (error) {
+          setToastMessage("❌ Error during transcription.");
           reject("Error during transcription: " + error.message);
         } finally {
           stream.getTracks().forEach((track) => track.stop());
+          setTimeout(() => setShowToast(false), 3000);
         }
       };
 
@@ -100,6 +114,8 @@ export async function transcribeSpeech() {
       setTimeout(() => mediaRecorder.stop(), 3000);
     });
   } catch (error) {
+    setToastMessage("❌ Failed to record audio.");
     throw new Error("Failed to record audio: " + error.message);
   }
 }
+

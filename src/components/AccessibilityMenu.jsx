@@ -139,25 +139,9 @@ const AccessibilityMenu = () => {
         localStorage.setItem("contrast", JSON.stringify(newContrast));
   
         if (newContrast) {
-          document.body.style.backgroundColor = "#F5F5F5";
-          document.body.style.color = "#333333";
-          document.body.style.fontSize = "18px";
-          document.body.style.backgroundImage = "none";
-          document.querySelectorAll("input, a").forEach(element => {
-            element.style.fontSize = "18px";
-            element.style.backgroundColor = "#FFFFFF";
-            element.style.color = "#000000";
-            element.style.border = "2px solid #333333";
-          });
+          document.body.classList.add("high-contrast");
         } else {
-          document.body.style.backgroundColor = "";
-          document.body.style.color = "";
-          document.body.style.backgroundImage = "";
-          document.querySelectorAll("input, a").forEach(element => {
-            element.style.backgroundColor = "";
-            element.style.color = "";
-            element.style.border = "";
-          });
+          document.body.classList.remove("high-contrast");
         }
   
         setToastMessage("✅ Contrast updated successfully!");
@@ -169,6 +153,7 @@ const AccessibilityMenu = () => {
       setTimeout(() => setShowToast(false), 3000);
     }
   };
+  
   
   const magnify = (event) => {
     try {
@@ -235,7 +220,7 @@ const AccessibilityMenu = () => {
       setToastMessage("🎤 Listening...");
       setShowToast(true);
       
-      const result = await transcribeSpeech();
+      const result = await transcribeSpeech(setToastMessage, setShowToast);
       const command = result.toLowerCase().trim();
       
       setToastMessage(`✅ Heard: "${command}"`);
@@ -304,11 +289,18 @@ const AccessibilityMenu = () => {
 
   const handleSpeak = async (text) => {
     try {
-      setToastMessage("🔊 Preparing to speak...");
-      setShowToast(true);
-      const audioUrl = await synthesizeSpeech(text);
-      const audio = new Audio(audioUrl);
-      audio.play();
+        console.log("🔊 Attempting to synthesize speech...");
+        setToastMessage("🔊 Preparing to speak...");
+        setShowToast(true);
+    
+        const audioUrl = await synthesizeSpeech(text);
+        console.log("Generated Audio URL:", audioUrl);
+        if (!audioUrl) {
+            throw new Error("Failed to generate speech audio");
+          }
+      
+          const audio = new Audio(audioUrl);
+          audio.play();
       setToastMessage("✅ Speaking text aloud.");
     } catch (error) {
       setToastMessage("❌ " + error);
@@ -532,6 +524,21 @@ const AccessibilityMenu = () => {
               box-shadow: 0 0 5px rgba(255, 82, 82, 0.5);
             }
           }
+
+          .high-contrast {
+            background-color: black !important;
+            color: white !important;
+            font-size: 18px !important;
+            }
+
+            .high-contrast input, 
+            .high-contrast a, 
+            .high-contrast button {
+            background-color: black !important;
+            color: yellow !important;
+            border: 2px solid white !important;
+            font-size: 18px !important;
+            }
         `}
       </style>
     </div>

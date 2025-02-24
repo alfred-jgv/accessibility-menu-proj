@@ -1,10 +1,13 @@
 import AccessibilityMenu from "./components/AccessibilityMenu";
-
+import SamplePage from "./pages/SamplePage";
 
 function App() {
 
   return (
-      <AccessibilityMenu/>
+    <>
+        <SamplePage/>
+        <AccessibilityMenu/>
+    </>
   );
 }
 
