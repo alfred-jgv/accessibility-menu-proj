@@ -552,7 +552,6 @@ const AccessibilityMenu = () => {
           .high-contrast {
             background-color: black !important;
             color: white !important;
-            font-size: 18px !important;
             }
 
             .high-contrast input, 
@@ -561,7 +560,6 @@ const AccessibilityMenu = () => {
             background-color: black !important;
             color: yellow !important;
             border: 2px solid white !important;
-            font-size: 18px !important;
             }
         `}
       </style>

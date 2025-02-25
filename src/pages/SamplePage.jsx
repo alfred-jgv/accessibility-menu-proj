@@ -10,10 +10,10 @@ const TravelDestinationsPage = () => {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      <h1 style={{ color: "#2c3e50", marginBottom: "20px" }}>
+      <h1 style={{ marginBottom: "20px" }}>
         Explore Amazing Travel Destinations
       </h1>
-      <p style={{ color: "#34495e", fontSize: "18px" }}>
+      <p style={{ fontSize: "18px" }}>
         Discover the most beautiful places around the world and plan your next
         adventure.
       </p>
@@ -29,22 +29,22 @@ const TravelDestinationsPage = () => {
       >
         <div style={{ textAlign: "center", width: "200px" }}>
           <FaPlane size={50} color="#3498db" />
-          <h3 style={{ color: "#2c3e50", marginTop: "10px" }}>Flights</h3>
-          <p style={{ color: "#7f8c8d" }}>
+          <h3 style={{ marginTop: "10px" }}>Flights</h3>
+          <p>
             Find the best flight deals to your dream destinations.
           </p>
         </div>
         <div style={{ textAlign: "center", width: "200px" }}>
           <FaHotel size={50} color="#e67e22" />
-          <h3 style={{ color: "#2c3e50", marginTop: "10px" }}>Hotels</h3>
-          <p style={{ color: "#7f8c8d" }}>
+          <h3>Hotels</h3>
+          <p>
             Book comfortable and affordable hotels for your stay.
           </p>
         </div>
         <div style={{ textAlign: "center", width: "200px" }}>
           <FaMapMarkedAlt size={50} color="#27ae60" />
-          <h3 style={{ color: "#2c3e50", marginTop: "10px" }}>Tours</h3>
-          <p style={{ color: "#7f8c8d" }}>
+          <h3>Tours</h3>
+          <p>
             Explore guided tours and activities at your destination.
           </p>
         </div>
@@ -60,7 +60,7 @@ const TravelDestinationsPage = () => {
           marginRight: "auto",
         }}
       >
-        <p style={{ color: "#34495e", fontSize: "18px", lineHeight: "1.6" }}>
+        <p style={{ lineHeight: "1.6" }}>
           Traveling is one of the most enriching experiences one can have. It
           allows you to immerse yourself in different cultures, taste new
           cuisines, and witness breathtaking landscapes. Whether you're
@@ -71,8 +71,6 @@ const TravelDestinationsPage = () => {
         </p>
         <p
           style={{
-            color: "#34495e",
-            fontSize: "18px",
             lineHeight: "1.6",
             marginTop: "20px",
           }}
@@ -86,8 +84,6 @@ const TravelDestinationsPage = () => {
         </p>
         <p
           style={{
-            color: "#34495e",
-            fontSize: "18px",
             lineHeight: "1.6",
             marginTop: "20px",
           }}
