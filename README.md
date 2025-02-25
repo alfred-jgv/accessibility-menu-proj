@@ -1,7 +1,7 @@
-# 🗣️ Accessibility Menu App – React + AWS Transcribe & Polly
+# 🗣️ Accessibility Menu – React + AWS Transcribe & Polly
 
 This is a **React-based accessibility app** that integrates **AWS Transcribe** (for speech-to-text) and **AWS Polly** (for text-to-speech). It also provides **contrast adjustments, text resizing, and magnification options** to enhance accessibility for users with visual impairments.  
-
+**The page utilized here is just a sample designed to showcase the features of the menu.**
 ---
 
 ## **🚀 Features**
